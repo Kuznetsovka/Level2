@@ -6,10 +6,12 @@ import java.awt.*;
 public class MainCanvas extends JPanel {
     protected long lastFrameTime;
     private MainCircles controller;
+    private int updateTime;
 
-    public MainCanvas(MainCircles controller) {
+    public MainCanvas(MainCircles controller, int updateTime) {
         lastFrameTime = System.nanoTime();
         this.controller = controller;
+        this.updateTime = updateTime;
     }
 
     @Override
@@ -18,14 +20,10 @@ public class MainCanvas extends JPanel {
         long currentTime = System.nanoTime();
         float deltaTime = (currentTime - lastFrameTime) * 0.000000001f;
 
-        setBackground(new Color(
-                (int) (Math.random() * 255),
-                (int) (Math.random() * 255),
-                (int) (Math.random() * 255)));
-
-        controller.onCanvasRepainted(this, g, deltaTime);
+        controller.onCanvasRepainted(this,g, deltaTime);
+        controller.onCanvas2Repainted(this,g);        
         try {
-            Thread.sleep(16);
+            Thread.sleep(updateTime);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

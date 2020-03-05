@@ -1,55 +1,39 @@
 package lesson1_2;
 
-import javax.swing.*;
 import java.awt.*;
 
-public class BackGround extends JPanel{
-    protected long lastFrameTime;
-    private MainCircles controller;
+public class BackGround extends Sprite{
     protected int width;
     protected int height;
 
-    public BackGround(MainCircles controller, int width, int height) {
-        lastFrameTime = System.nanoTime();
-        this.controller = controller;
+    public BackGround(int width, int height) {
         this.height = height;
         this.width = width;
     }
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        long currentTime = System.nanoTime();
-        Color color = newColor();
-        controller.onBackgroundRepainted(this,  g, color);
-        try {
-            Thread.sleep(16);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        lastFrameTime = currentTime;
-        repaint();
-    }
-
-    private Color newColor() {
+    private Color getColor() {
         return new Color(
                 (int) (Math.random() * 255),
                 (int) (Math.random() * 255),
                 (int) (Math.random() * 255));
     }
 
-    public void render(Graphics g, Color color) {
-        g.setColor(color);
-        g.fillRect(0,0, getWidth(), getHeight());
+    public void render(MainCanvas canvas,Graphics g) {
+        g.setColor(getColor());
+        g.fillRect(0,0, (int) getWidth(), (int) getHeight());
+    }
+
+    public void update(MainCanvas canvas,Graphics g) {
+        g.setColor(getColor());
     }
 
     @Override
-    public int getWidth() {
+    public float getWidth() {
         return width;
     }
 
     @Override
-    public int getHeight() {
+    public float getHeight() {
         return height;
     }
 }

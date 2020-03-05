@@ -2,12 +2,11 @@ package lesson1_2;
 
 import java.awt.*;
 
-public abstract class Sprite {
+public class Sprite {
     protected float x;
     protected float y;
     protected float halfWidth;
     protected float halfHeight;
-    Sprite(){}
 
     protected float getLeft() {
         return x - halfWidth;
@@ -42,7 +41,6 @@ public abstract class Sprite {
 
     public void update(MainCanvas canvas, float deltaTime) {}
     public void render(MainCanvas canvas, Graphics g) {}
-    public void render(BackGround backGround, Graphics g, Color color) {}
-    public void update(BackGround backGround,float deltaTime){}
+    public void update(MainCanvas canvas,Graphics g){}
 
 }
