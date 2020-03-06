@@ -21,7 +21,6 @@ public class MainCanvas extends JPanel {
         float deltaTime = (currentTime - lastFrameTime) * 0.000000001f;
 
         controller.onCanvasRepainted(this,g, deltaTime);
-        controller.onCanvas2Repainted(this,g);        
         try {
             Thread.sleep(updateTime);
         } catch (InterruptedException e) {

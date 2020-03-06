@@ -35,14 +35,12 @@ public class MainCircles extends JFrame {
         initApplication();
         setVisible(true);
 
-        MainCanvas canvas1 = new MainCanvas(this,16);
-        MainCanvas canvas2 = new MainCanvas(this,160);
-        LayoutManager overlay = new OverlayLayout(canvas1);
-        canvas1.setLayout(overlay);
-        add(canvas1);
-        add(canvas2);
+        MainCanvas canvas = new MainCanvas(this,160);
 
-        canvas1.addMouseListener(new MouseListener() {
+        add(canvas);
+
+
+        canvas.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
             }
@@ -85,22 +83,19 @@ public class MainCircles extends JFrame {
         if (i<sprites1.length) sprites1[i] = new Ball(X,Y);
     }
 
-    public void onCanvasRepainted(MainCanvas canvas1, Graphics g, float deltaTime) {
-        update(canvas1, deltaTime);
-        render(canvas1, g);
+    public void onCanvasRepainted(MainCanvas canvas, Graphics g, float deltaTime) {
+        update2(canvas, g);
+        render2(canvas, g);
+        update(canvas, deltaTime);
+        render(canvas, g);
     }
 
-    public void onCanvas2Repainted(MainCanvas canvas2, Graphics g) {
-        update2(canvas2, g);
-        render2(canvas2, g);
+    private void update2(MainCanvas canvas1,Graphics g) {
+        sprite.update(canvas1,g);
     }
 
-    private void update2(MainCanvas canvas2,Graphics g) {
-        sprite.update(canvas2,g);
-    }
-
-    private void render2(MainCanvas canvas2, Graphics g) {
-        sprite.render(canvas2,g);
+    private void render2(MainCanvas canvas1, Graphics g) {
+        sprite.render(canvas1,g);
     }
 
     private void update(MainCanvas canvas1, float deltaTime) {
