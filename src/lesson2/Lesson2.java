@@ -1,18 +1,23 @@
 package lesson2;
 
-public class Lesson2 {
+public class Lesson2 extends InfoExceptions {
     public static final String STR = "10 3 1 2\n2 3 2 2\n5 6 7 1\n300 3 1 0";
     public static String[][] arr;
     public static int COUNT;
+
+    public Lesson2(String message) {
+        super(message);
+    }
+
     public static void main(String[] args){
         try {
             createMatrix(STR);
             int a = strToIntArr(arr,COUNT);
             System.out.println(a);
         } catch (ArrayIndexOutOfBoundsException e){
-            System.out.println("Массив не 4х4!");
-        } catch (NumberFormatException e) {
-            System.out.println("Элемент массива не число!");
+            infoArrayExceptions();
+        } catch (NumberFormatException e){
+            infoNumberFormatExceptions(e.getMessage());
         }
     }
 
