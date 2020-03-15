@@ -24,6 +24,7 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
     private final JButton btnDisconnect = new JButton("<html><b>Disconnect</b></html>");
     private final JTextField tfMessage = new JTextField();
     private final JButton btnSend = new JButton("Send");
+    private StringBuilder textLog = new StringBuilder("");
     private String prefix = System.getProperty("user.dir");
     private final String filePath = prefix + "/log.txt";
     private File file = new File(filePath);
@@ -42,7 +43,6 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
     }
 
     private ClientGUI() {
-
         Thread.setDefaultUncaughtExceptionHandler(this);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -72,7 +72,6 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
         add(scrollUsers, BorderLayout.EAST);
         add(panelTop, BorderLayout.NORTH);
         add(panelBottom, BorderLayout.SOUTH);
-
         setVisible(true);
     }
 
@@ -115,13 +114,11 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
 
 
     private void checkedFile(File file) {
-        if (file.exists()) {
-        } else {
-            try {
-                file.createNewFile();
-            } catch (IOException ioe) {
-                throw new RuntimeException("Файл не создан! Путь: " + filePath);
-            }
+        try {
+            if (!file.exists())
+            file.createNewFile();
+        } catch (IOException ioe) {
+            throw new RuntimeException("Файл не создан! Путь: " + filePath);
         }
     }
 
@@ -137,23 +134,11 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
     }
 
     private void writeToFile(String filePath, String text) {
-        FileReader fr;
-        String result = "";
         try {
-            fr = new FileReader(filePath);
-            BufferedReader br = new BufferedReader(fr);
-            String str = br.readLine();
-            String lineSeparator = System.getProperty("line.separator");
-            while (str != null) {
-                result += str + lineSeparator;
-                str = br.readLine();
-            }
-            result = result + text;
+            textLog.append(text);
             FileWriter fw = new FileWriter(filePath);
-            fw.write(result);
+            fw.write(String.valueOf(textLog));
             fw.close();
-            fr.close();
-            br.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
