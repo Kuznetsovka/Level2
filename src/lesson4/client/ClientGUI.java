@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
-public class ClientGUI extends JFrame implements ActionListener, Thread.UncaughtExceptionHandler, KeyListener {
+public class ClientGUI extends JFrame implements ActionListener, Thread.UncaughtExceptionHandler {
 
     private static final int WIDTH = 400;
     private static final int HEIGHT = 300;
@@ -24,7 +24,7 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
     private final JButton btnDisconnect = new JButton("<html><b>Disconnect</b></html>");
     private final JTextField tfMessage = new JTextField();
     private final JButton btnSend = new JButton("Send");
-    private StringBuilder textLog = new StringBuilder("");
+    private StringBuilder textLog = new StringBuilder();
     private String prefix = System.getProperty("user.dir");
     private final String filePath = prefix + "/log.txt";
     private File file = new File(filePath);
@@ -57,7 +57,7 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
         scrollUsers.setPreferredSize(new Dimension(100, 0));
         cbAlwaysOnTop.addActionListener(this);
         btnSend.addActionListener(this);
-        tfMessage.addKeyListener(this);
+        tfMessage.addActionListener(this);
         btnDisconnect.addActionListener(this);
         panelTop.add(tfIPAddress);
         panelTop.add(tfPort);
@@ -88,35 +88,20 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
             checkedFile(file);
         } else if (src == btnDisconnect) {
             log.setText("");
-            //Если бы писал в лог не потоками, тогда здесь бы закрывал файл
-        } else
-            throw new RuntimeException("Unknown source: " + src);
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+        } else if (src == tfMessage) {
             checkedFile(file);
             writeMessage(tfMessage.getText());
             tfMessage.setText("");
+        } else {
+            throw new RuntimeException("Unknown source: " + src);
         }
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-
     }
 
 
     private void checkedFile(File file) {
         try {
             if (!file.exists())
-            file.createNewFile();
+                file.createNewFile();
         } catch (IOException ioe) {
             throw new RuntimeException("Файл не создан! Путь: " + filePath);
         }
@@ -124,8 +109,7 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
 
     private void writeMessage(String text) {
         if (text.equals("")) return;
-        String textArea = log.getText() + addText(text, formatForDateChat);
-        log.setText(textArea);
+        log.append(addText(text, formatForDateChat));
         writeToFile(filePath, addText(text, formatForDateLog));
     }
 
