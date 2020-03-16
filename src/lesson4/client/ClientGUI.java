@@ -88,7 +88,6 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
             checkedFile(file);
         } else if (src == btnDisconnect) {
             log.setText("");
-            //Если бы писал в лог не потоками, тогда здесь бы закрывал файл
         } else
             throw new RuntimeException("Unknown source: " + src);
     }
