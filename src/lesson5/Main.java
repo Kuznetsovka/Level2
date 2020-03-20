@@ -19,7 +19,7 @@ public class Main {
         long a = System.currentTimeMillis();
         calculate(arr,1);
         System.out.println(System.currentTimeMillis() - a);
-        System.out.println(arr[SIZE-1]);
+        System.out.println(arr[SIZE-2]);
     }
 
     public static void method2() {
@@ -29,8 +29,8 @@ public class Main {
         long a = System.currentTimeMillis();
         System.arraycopy(arr, 0, a1, 0, HALF);
         System.arraycopy(arr, HALF, a2, 0, HALF);
-        MyThread mt1 = new MyThread(a1,1);
-        MyThread mt2 = new MyThread(a2,2);
+        MyThread mt1 = new MyThread(a1,0);
+        MyThread mt2 = new MyThread(a2,HALF);
         mt1.start();
         mt2.start();
         try {
@@ -42,12 +42,12 @@ public class Main {
         System.arraycopy(a1, 0, arr, 0, HALF);
         System.arraycopy(a2, 0, arr, HALF, HALF);
         System.out.println(System.currentTimeMillis() - a);
-        System.out.println(arr[SIZE-1]);
+        System.out.println(arr[SIZE-2]);
     }
 
     public static synchronized void calculate(float[] myArr, int level) {
         for (int i = 0; i < myArr.length; i++)
-            myArr[i] = (float) (myArr[i] * Math.sin(0.2f + i *level/ 5) * Math.cos(0.2f + i*level / 5) * Math.cos(0.4f + i*level / 2));
+            myArr[i] = (float) (myArr[i] * Math.sin(0.2f +(i + level)/ 5) * Math.cos(0.2f + (i + level) / 5) * Math.cos(0.4f + (i+level) / 2));
     }
 
     static class MyThread extends Thread {
