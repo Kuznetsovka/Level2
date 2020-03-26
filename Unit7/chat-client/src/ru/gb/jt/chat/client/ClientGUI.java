@@ -10,6 +10,8 @@ import java.awt.event.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class ClientGUI extends JFrame implements ActionListener, Thread.UncaughtExceptionHandler, SocketThreadListener {
@@ -30,6 +32,9 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
     private final JButton btnDisconnect = new JButton("<html><b>Disconnect</b></html>");
     private final JTextField tfMessage = new JTextField();
     private final JButton btnSend = new JButton("Send");
+    private Date date = new Date();
+    private SimpleDateFormat formatForDateLog = new SimpleDateFormat("E yyyy.MM.dd 'время' k:mm:ss zzz");
+    private SimpleDateFormat formatForDateChat = new SimpleDateFormat("k:mm:ss");
 
     private final JList<String> userList = new JList<>();
     private SocketThread socketThread;
@@ -89,6 +94,7 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
         } else if (src == btnLogin) {
             connect();
         } else if (src == btnDisconnect) {
+            log.setText("");
             socketThread.close();
         }
         else
@@ -98,7 +104,7 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
     private void connect() {
         try {
             Socket socket = new Socket(tfIPAddress.getText(), Integer.parseInt(tfPort.getText()));
-            socketThread = new SocketThread(this, "Client", socket);
+            socketThread = new SocketThread(this, tfLogin.getText(), socket);
         } catch (IOException e) {
             showException(Thread.currentThread(), e);
         }
@@ -110,10 +116,6 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
         tfMessage.setText(null);
         tfMessage.grabFocus();
         socketThread.sendMessage(msg);
-
-
-//        putLog(String.format("%s: %s", username, msg));
-//        wrtMsgToLogFile(msg, username);
     }
 
     private void wrtMsgToLogFile(String msg, String username) {
@@ -131,10 +133,14 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                log.append(deCodeMsg(msg) + "\n");
+                log.append(formatText(msg, formatForDateChat) + "\n");
                 log.setCaretPosition(log.getDocument().getLength());
             }
         });
+    }
+
+    private String formatText(String msg,SimpleDateFormat formatD) {
+        return formatD.format(date) + " " + socketThread.getName()+ ": " + deCodeMsg(msg);
     }
 
     private String deCodeMsg(String msg) {
@@ -187,7 +193,6 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
         String login = tfLogin.getText();
         String password = new String(tfPassword.getPassword());
         thread.sendMessage(Library.getAuthRequest(login, password));
-
     }
 
     @Override
