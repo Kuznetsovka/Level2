@@ -3,7 +3,6 @@ package ru.gb.jt.network;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
 public class ServerSocketThread extends Thread {
@@ -35,8 +34,6 @@ public class ServerSocketThread extends Thread {
                 }
                 listener.onSocketAccepted(this, server, socket);
             }
-        } catch (SocketException e) {
-            listener.onServerException(this, e);
         } catch (IOException e) {
             listener.onServerException(this, e);
         } finally {

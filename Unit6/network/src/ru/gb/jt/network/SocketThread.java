@@ -4,14 +4,14 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.net.SocketException;
-import java.text.SimpleDateFormat;
+import java.util.List;
 
 public class SocketThread extends Thread {
 
     private final Socket socket;
     private DataOutputStream out;
     private SocketThreadListener listener;
+    private List<String> getPrivateListUsers;
 
     public SocketThread(SocketThreadListener listener, String name, Socket socket) {
         super(name);
@@ -29,10 +29,8 @@ public class SocketThread extends Thread {
             listener.onSocketReady(this, socket);
             while (!isInterrupted()) {
                 String msg = in.readUTF();
-                listener.onReceiveString(this, socket, msg);
+                listener.onReceiveString(this,socket, msg);
             }
-        } catch (SocketException e){
-            listener.onSocketException(this,e);
         } catch (IOException e) {
             listener.onSocketException(this, e);
         } finally {
@@ -52,7 +50,6 @@ public class SocketThread extends Thread {
             return false;
         }
     }
-
 
     public synchronized void close() {
         interrupt();

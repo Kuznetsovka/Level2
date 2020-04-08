@@ -126,9 +126,9 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
         }
     }
 
-    private void wrtMsgToLogFile(String msg, String username) {
+    private void wrtMsgToLogFile(String msg) {
         try (FileWriter out = new FileWriter("log.txt", true)) {
-            out.write(username + ": " + msg + "\n");
+            out.write( msg + "\n");
             out.flush();
         } catch (IOException e) {
             showException(Thread.currentThread(), e);
@@ -213,12 +213,10 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
                 socketThread.close();
                 break;
             case Library.TYPE_BROADCAST:
-                putLog(DATE_FORMAT.format(Long.parseLong(arr[1])) +
-                        arr[2] + ": " + arr[3]);
-                break;
             case Library.TYPE_PRIVATE_CLIENT:
-                putLog(DATE_FORMAT.format(Long.parseLong(arr[1])) +
-                        arr[2] + ": " + arr[3]);
+                msg = DATE_FORMAT.format(Long.parseLong(arr[1])) + arr[2] + ": " + arr[3];
+                putLog(msg);
+                wrtMsgToLogFile(msg);
                 break;
             case Library.USER_LIST:
                 String users = msg.substring(Library.USER_LIST.length() +
@@ -230,7 +228,6 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
             default:
                 throw new RuntimeException("Unknown message type: " + msg);
         }
-
     }
 
     @Override
